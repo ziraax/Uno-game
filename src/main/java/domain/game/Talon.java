@@ -11,7 +11,7 @@ public class Talon {
     private final List<CarteAbstrait> talon = new ArrayList<>(108);
 
     public Talon(Pioche pioche){
-        empiler(premiereCarteTalon(pioche));
+        empiler(initTalonPremiereCarteNoPlus4(pioche));
     }
 
     public CarteAbstrait depiler() {
@@ -22,12 +22,22 @@ public class Talon {
         return talon.size();
     }
 
+    public CarteAbstrait getSommetTalon(){
+        return talon.get(0);
+    }
+
     public void empiler(CarteAbstrait carte) {
         talon.add(0, carte);
     }
 
-    public CarteAbstrait premiereCarteTalon(Pioche pioche){
-        
+    /**
+     *
+     * @param pioche de la partie
+     * @return la premiere carte du talon qui n'est pas un +4
+     * si c'est le cas, on la remelange dans la pioche
+     */
+    public CarteAbstrait initTalonPremiereCarteNoPlus4(Pioche pioche){
+
         CarteAbstrait carte;
 
         while(true){

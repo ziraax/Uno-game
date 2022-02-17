@@ -11,6 +11,12 @@ public class CarteJoker extends CarteAbstrait {
         CarteMethodesUtiles.estCouleurValide(couleur);
     }
 
+    // TODO: 17/02/2022  
+    @Override
+    public boolean isCompatible(CarteAbstrait carte) {
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
