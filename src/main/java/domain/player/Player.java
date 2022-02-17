@@ -8,11 +8,18 @@ import java.util.ArrayList;
 public class Player {
     private final String nom;
     private final ArrayList<CarteAbstrait> mainJoueur;
+    private final int score;
 
-    public Player(String nom, ArrayList<CarteAbstrait> mainJoueur) {
+    public Player(String nom, ArrayList<CarteAbstrait> mainJoueur, int score) {
         super();
         this.nom = nom;
         this.mainJoueur = mainJoueur;
+        this.score = score;
+    }
+
+
+    public int getScore() {
+        return score;
     }
 
     public String getNom() {
@@ -30,8 +37,6 @@ public class Player {
     public ArrayList<CarteAbstrait> getMainJoueur() {
         return mainJoueur;
     }
-
-
 
     public int nbCartesMain() {
         return mainJoueur.size();

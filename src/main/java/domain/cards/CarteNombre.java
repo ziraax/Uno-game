@@ -12,6 +12,27 @@ public class CarteNombre extends CarteAbstrait {
         return num;
     }
 
+    // TODO: 17/02/2022
+    @Override
+    public boolean isCompatible(CarteAbstrait carte) {
+        if (carte instanceof CarteJoker) {
+            return true;
+        }
+
+        if (carte instanceof CarteAction) {
+            if (carte.getType() == TypeCarte.SKIP) {
+            }
+
+            if (carte instanceof CarteNombre) {
+                return (carte.getCouleur() == this.getCouleur() ||
+                        ((CarteNombre) carte).getNumCard() == this.getNumCard());
+            } else {
+                return (carte.getCouleur() == this.getCouleur());
+            }
+
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
