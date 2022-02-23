@@ -11,12 +11,29 @@ public class CarteAction extends CarteAbstrait {
     // TODO: 17/02/2022  
     @Override
     public boolean isCompatible(CarteAbstrait carte) {
-        if(carte instanceof CarteJoker){
-            return true;
+
+        boolean compatible = false;
+
+        switch(getType()){
+            case SKIP:
+                if(carte.getType() == TypeCarte.SKIP)
+                    compatible = true;
+                if(carte.getCouleur() == getCouleur())
+                    compatible = true;
+                break;
+            case REVERSE:
+                if(carte.getType() == TypeCarte.REVERSE)
+                    compatible = true;
+                if(carte.getCouleur() == getCouleur())
+                    compatible = true;
+                break;
+            case PLUS_DEUX:
+                if(carte.getCouleur() == getCouleur())
+                    compatible = true;
+                break;
         }
-        if(carte instanceof CarteAction){
-            return false;
-        }
+
+        return compatible;
     }
 
     @Override

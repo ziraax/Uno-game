@@ -1,5 +1,6 @@
 package main.java.domain.game;
 
+
 import main.java.domain.cards.CarteAbstrait;
 import main.java.domain.cards.CarteAction;
 import main.java.domain.interactions.Clavier;
@@ -10,94 +11,64 @@ import java.util.*;
 
 public class Manche {
 
-    public Player[] players;
     public Pioche pioche = new Pioche();
     public Talon talon = new Talon(pioche);
-    private Player currentPlayer;
-    private final int indiceCurrentPlayer = 0;
+    private int indiceCurrentPlayer;
+    public SensJeu sensmanche;
+
+    public Player[] players;
 
 
-    public Manche(){
+    public Manche(Player[] players){
+
+        this.players = players;
         Pioche pioche = new Pioche();
         Talon talon = new Talon(pioche);
-        initialisationJoueurs();
-        lancerUneManche();
+        sensmanche = SensJeu.HORAIRE;
+
+        Random r = new Random();
+        indiceCurrentPlayer = r.nextInt(players.length);
+
+        dealCartes();
+        informationJeu();
     }
 
     public void lancerUneManche(){
+
         System.out.println("La manche commence !");
         /* TODO CONTINUER LA BOUCLE */
-        /*
+
+
+
         while(true){
-            currentPlayer = players[indiceCurrentPlayer];
+
+            /*
             System.out.println("Tour de " + currentPlayer.getNom());
+
             if(talon.getSommetTalon() instanceof CarteAction)
+
+             */
         }
 
-         */
-    }
-
-    /**
-     * permet de distribuer un jeu de carte
-     * @return une liste de 6 cartes qui correspond a la main de départ d'un joueur
-     */
-    public ArrayList<CarteAbstrait> dealCartesInit(){
-        ArrayList<CarteAbstrait> init = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            init.add(i, prendreUneCarte());
-        }
-        return init;
-    }
-
-    /**
-     * permet d'initialiser le jeu en dsitribuant les cartes et en donnnt un psuedo à tout le monde
-     * ainsi qu'en initialisant le score a de 0 de tout le monde
-     */
-    public void initialisationJoueurs(){
-        int nbJoueurs = 0;
-        System.out.println("Veuillez rentrer le nombre de joueurs (2-10)");
-        nbJoueurs = Clavier.lireEntier(2,10);
-        players = new Player[nbJoueurs];
-
-        for (int i = 0; i < nbJoueurs; i++) {
-            String nom;
-            boolean isNomUnique;
-
-            do {
-                System.out.println("Nom du joueur ?");
-                nom = Clavier.lireChaine();
-                isNomUnique = boolValidePseudo(nom, i);
-                if (!isNomUnique) {
-                    System.out.println("Le nom " + nom + "> est déja utilisé");
-                }
-            } while (!isNomUnique);
-
-            players[i] = new Player(nom, dealCartesInit(), 0);
-
-            /* PERMET D'AFFICHER TOUTES LES MAINS DE TOUS LES JOUEURS
-            System.out.println(Arrays.toString(players[i].getMainJoueur().toArray()));
-            */
-        }
 
     }
 
-    /**
-     *
-     * @param pseudoJoueur a verifier
-     * @param indice du joueur dans le tableau de joueur
-     * @return un booleen qui dit si le pseudo est valide (<=> unique)
-     */
-    private boolean boolValidePseudo(String pseudoJoueur, int indice) {
-        if (indice == 0) {
-            return true;
+    private void informationJeu(){
+        for (Player player: players
+        ) {
+            System.out.println(Arrays.toString(player.getMainJoueur().toArray()) + player.getNom());
         }
-        for (int j = 0; j < indice; j++) {
-            if (players[j].getNom().equalsIgnoreCase(pseudoJoueur)) {
-                return false;
+    }
+
+    public void dealCartes(){
+        for(int nbCarte = 0; nbCarte < 6; nbCarte++){
+            for (Player player: players
+            ) {
+                player.ajoutCarte(pioche.depiler());
             }
         }
-        return true;
     }
+
 
     /**
      *

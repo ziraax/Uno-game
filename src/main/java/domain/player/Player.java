@@ -10,13 +10,19 @@ public class Player {
     private final ArrayList<CarteAbstrait> mainJoueur;
     private final int score;
 
-    public Player(String nom, ArrayList<CarteAbstrait> mainJoueur, int score) {
+    public Player(String nom, int score) {
         super();
         this.nom = nom;
-        this.mainJoueur = mainJoueur;
+        mainJoueur = new ArrayList<>();
         this.score = score;
     }
 
+    /*
+    methode pour calculer le score
+     */
+    public int getScoreFinManche(){
+        return 0;
+    }
 
     public int getScore() {
         return score;
@@ -26,6 +32,7 @@ public class Player {
         return nom;
     }
 
+
     public void ajoutCarte(CarteAbstrait Carte){
         mainJoueur.add(Carte);
     }
@@ -33,6 +40,7 @@ public class Player {
     public CarteAbstrait retirerCarte(int num) {
         return mainJoueur.remove(num);
     }
+
 
     public ArrayList<CarteAbstrait> getMainJoueur() {
         return mainJoueur;
