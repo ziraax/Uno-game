@@ -6,9 +6,9 @@ import main.java.domain.cards.CarteAbstrait;
 import java.util.ArrayList;
 
 public class Player {
-    private final String nom;
-    private final ArrayList<CarteAbstrait> mainJoueur;
-    private final int score;
+    private String nom;
+    private ArrayList<CarteAbstrait> mainJoueur;
+    private int score;
 
     public Player(String nom, int score) {
         super();
@@ -20,6 +20,15 @@ public class Player {
     /*
     methode pour calculer le score
      */
+
+    public void setNom(String s){
+        this.nom = s;
+    }
+
+    public void setScore(int s){
+        this.score = s;
+    }
+
     public int getScoreFinManche(){
         return 0;
     }

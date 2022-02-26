@@ -3,13 +3,18 @@ package main.java.domain.game;
 import main.java.domain.interactions.Clavier;
 import main.java.domain.player.Player;
 
-public class Jeu {
+import java.util.Objects;
 
+public class Jeu {
+    public int nbJoueurs;
     public Player[] players;
     final static int MAXPOINT = 500;
 
     public Jeu(){
-        initialisationJoueurs();
+        System.out.println("nbjoueur");
+        nbJoueurs = Clavier.lireEntier(2,10);
+
+        initialisationJoueurs(nbJoueurs);
     }
 
     public void lancer(){
@@ -31,39 +36,23 @@ public class Jeu {
     }
 
     public void afficherScore(){
-
-    }
-
-
-    /**
-     * permet d'initialiser le jeu en dsitribuant les cartes et en donnnt un psuedo à tout le monde
-     * ainsi qu'en initialisant le score a de 0 de tout le monde
-     */
-    public void initialisationJoueurs(){
-        int nbJoueurs = 0;
-        System.out.println("Veuillez rentrer le nombre de joueurs (2-10)");
-        nbJoueurs = Clavier.lireEntier(2,10);
-        players = new Player[nbJoueurs];
-
-        for (int i = 0; i < nbJoueurs; i++) {
-            String nom;
-            boolean isNomUnique;
-
-            do {
-                System.out.println("Nom du joueur ?");
-                nom = Clavier.lireChaine();
-                isNomUnique = boolValidePseudo(nom, i);
-                if (!isNomUnique) {
-                    System.out.println("Le nom " + nom + "> est déja utilisé");
-                }
-            } while (!isNomUnique);
-
-            /*
-            System.out.println(Arrays.toString(players[i].getMainJoueur().toArray()));
-             */
-
+        for (Player player:players
+             ) {
+            System.out.println("Score du joueur : "+player.getScore() + " = " + player.getScore());
         }
     }
+
+
+    public void initialisationJoueurs(int i){
+        players = new Player[i];
+        String nom;
+        for (int j = 0; j < i; j++) {
+            System.out.println("Nom du joueur ?");
+            nom = Clavier.lireChaine();
+            players[j] = new Player(nom, 0);
+        }
+    }
+
 
     /**
      *
@@ -71,7 +60,21 @@ public class Jeu {
      * @param indice du joueur dans le tableau de joueur
      * @return un booleen qui dit si le pseudo est valide (<=> unique)
      */
-    private boolean boolValidePseudo(String pseudoJoueur, int indice) {
+    private boolean boolValidePseudo(String pseudoJoueur) {
+
+        for (Player player: players
+        ) {
+            String nom;
+            boolean isNomUnique;
+
+            if(Objects.equals(player.getNom(), pseudoJoueur)){
+                return false;
+            }
+        }
+        return true;
+
+
+        /*
         if (indice == 0) {
             return true;
         }
@@ -81,5 +84,8 @@ public class Jeu {
             }
         }
         return true;
+
+
+         */
     }
 }

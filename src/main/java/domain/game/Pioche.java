@@ -55,6 +55,4 @@ public class Pioche {
     public void empiler(CarteAbstrait carte) {
         pioche.add(0, carte);
     }
-
-
 }
