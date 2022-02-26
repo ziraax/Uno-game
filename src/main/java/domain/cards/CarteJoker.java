@@ -14,8 +14,16 @@ public class CarteJoker extends CarteAbstrait {
     // TODO: 17/02/2022  
     @Override
     public boolean isCompatible(CarteAbstrait carte) {
-        return false;
+        if(getCouleur() == null){
+            return false;
+        }
+        return(getCouleur() == carte.getCouleur());
     }
+
+    public void setCouleurCarteJoker(CouleurCarte couleur){
+        this.couleur = couleur;
+    }
+
 
     @Override
     public boolean equals(Object o) {

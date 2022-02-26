@@ -1,8 +1,8 @@
 package main.java.domain.cards;
 
 public abstract class CarteAbstrait implements Carte {
-    private final TypeCarte type;
-    private final CouleurCarte couleur;
+    protected final TypeCarte type;
+    protected CouleurCarte couleur;
 
     protected CarteAbstrait(TypeCarte type, CouleurCarte couleur){
         this.type = type;
@@ -18,6 +18,7 @@ public abstract class CarteAbstrait implements Carte {
     public CouleurCarte getCouleur() {
         return couleur;
     }
+
 
     /**
      *
