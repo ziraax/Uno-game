@@ -11,7 +11,7 @@ public class Jeu {
     final static int MAXPOINT = 500;
 
     public Jeu(){
-        System.out.println("nbjoueur");
+        System.out.println("Nombre de joueurs : ");
         nbJoueurs = Clavier.lireEntier(2,10);
 
         initialisationJoueurs(nbJoueurs);

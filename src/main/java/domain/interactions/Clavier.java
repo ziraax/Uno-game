@@ -1,5 +1,7 @@
 package main.java.domain.interactions;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -78,5 +80,30 @@ public class Clavier {
     public static void fermer() {
         scanner.close();
     }
+
+    public static boolean useRegexNormalCard(final String input) {
+        final Pattern pattern = Pattern.compile("/j\s[0-9]+", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean useRegexShowHand(final String input) {
+        final Pattern pattern = Pattern.compile("/m", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean useRegexTakeCard(final String input) {
+        final Pattern pattern = Pattern.compile("/p", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean useRegexPasser(final String input) {
+        final Pattern pattern = Pattern.compile("/e", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
 
 }

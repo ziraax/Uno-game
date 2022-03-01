@@ -6,6 +6,11 @@ import main.java.domain.interactions.Clavier;
 import main.java.domain.player.Player;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import static main.java.domain.interactions.Clavier.*;
 
 
 public class Manche {
@@ -16,6 +21,8 @@ public class Manche {
     public SensJeu sensmanche;
 
     public Player[] players;
+
+    static Scanner input = new Scanner(System.in);
 
 
     public Manche(Player[] players){
@@ -36,85 +43,76 @@ public class Manche {
     }
 
     public void lancerUneManche(){
-        Scanner input = new Scanner(System.in);
+
         System.out.println("La manche commence !");
-        /* TODO CONTINUER LA BOUCLE */
-
-
-        while(true){
+        while(!hasSomeoneNoCard()){
+            System.out.println("Pour afficher la main du joueur, taper /m");
+            System.out.println("Pour piocher une carte, taper /p");
+            System.out.println("Pour jouer une carte, taper /j n");
+            System.out.println("Pour passer votre tour, taper /e");
+            System.out.println("\n");
             System.out.println("La carte au sommet du talon est : " + talon.getSommetTalon());
+            applyCardEffect(talon.getSommetTalon());
+
             System.out.println("C'est au joueur : " + players[indiceCurrentPlayer].getNom());
-            System.out.println("Sa main est : " + players[indiceCurrentPlayer].getMainJoueur().toString());
 
-            int idx_carte;
-            CarteAbstrait carte_choisi;
-            boolean aPioche = false;
-            boolean aPasse = false;
 
-            do {
-                /*
-                gerer la pioche autrement, la solution n'est surement pas de faire un do while directement
-                peut etre un while !ajouer ou jouer = jouer ou piocher + jouer ou piocher
-                 */
-                System.out.println("Voulez vous piocher ? Vous pourrez rejouer votre carte directement (boolean)");
-                aPioche = input.nextBoolean();
+            //pour passer au prochain tour, il faut soit que le joueur courant ait pris une carte puis passé ou joué, soit qu'il ait joué une carte
 
-                if(aPioche){
-                    players[indiceCurrentPlayer].getMainJoueur().add(prendreUneCarte());
-                }
+            //0 = aPioche
+            //1 = aPasse
+            //2 = aJoue
+            Boolean[] arrayControl = new Boolean[3];
+            arrayControl[0] = false;
+            arrayControl[1] = false;
+            arrayControl[2] = false;
 
-                System.out.println("Votre main est : " + players[indiceCurrentPlayer].getMainJoueur().toString());
-                System.out.println("Voulez vous passer ? (boolean)");
-                aPasse = input.nextBoolean();
-
-                if(aPasse){
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
-                }
-
-                System.out.println("Choisir une carte compatible ou alors piochez une carte : ");
-                idx_carte = Clavier.lireEntier(0, players[indiceCurrentPlayer].nbCartesMain());
-                /*
-                players[indiceCurrentPlayer].retirerCarte(idx_carte);
-                 */
-                carte_choisi = players[indiceCurrentPlayer].getMainJoueur().get(idx_carte);
-            }while(!carte_choisi.isCompatible(talon.getSommetTalon()) || aPasse);
+            CarteAbstrait carte_choisi = readCommand(arrayControl);
 
             //on suppr la carte utilisé de la main et on l'empile sur le talon
-            talon.empiler(players[indiceCurrentPlayer].retirerCarte(idx_carte));
 
-            switch(carte_choisi.getType()){
-                case SKIP -> {
-                    System.out.println("Le prochain joueur est skip!");
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, true);
-                }
-                case REVERSE -> {
-                    System.out.println("Changement de sens!");
-                    sensmanche = SensJeu.ANTI_HORAIRE;
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
-                }
-                case PLUS_DEUX -> {
-                    for (int i = 0; i <2; i++) {
-                        players[incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false)].getMainJoueur().add(prendreUneCarte());
-                    }
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
-                }
-                case PLUS_QUATRE -> {
-                    //choix couleur avant, casting carte???
-                    for (int i = 0; i < 4; i++) {
-                        players[incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false)].getMainJoueur().add(prendreUneCarte());
-                    }
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+            if(!(carte_choisi == null)){
+                applyCardEffect(carte_choisi);
+            } else {
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+            }
 
+            //attention a l'enlever, sachant que sert juste a faire des verifs
+            informationJeu();
+            /*
+            System.exit(0);
+             */
+        }
+        setPointsForAllPlayers();
+        afficherScore();
+    }
+
+    public boolean hasSomeoneNoCard(){
+        for(Player player: players
+        ){
+            if(player.getMainJoueur().size() == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setPointsForAllPlayers(){
+        for(Player player: players
+        ) {
+            int score = 0;
+            for (int i = 0; i < player.getMainJoueur().size(); i++) {
+                if(player.getMainJoueur().get(i) instanceof CarteNombre){
+                    score += ((CarteNombre) player.getMainJoueur().get(i)).getNumCard();
                 }
-                case CHANG_COULEUR -> {
-                    //choix couleur avant, casting carte???
+                if(player.getMainJoueur().get(i) instanceof CarteAction){
+                    score += 20;
                 }
-                case NOMBRE -> {
-                    indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+                if(player.getMainJoueur().get(i) instanceof CarteJoker){
+                    score += 50;
                 }
             }
-            informationJeu();
-            System.exit(0);
+            player.setScore(score);
         }
     }
 
@@ -176,7 +174,6 @@ public class Manche {
         }
     }
 
-
     /**
      *
      * @return la carte tirée de la pioche
@@ -197,6 +194,124 @@ public class Manche {
         return pioche.depiler();
     }
 
+    public CarteAbstrait readCommand(Boolean[] arrayControl){
+        while (true){
 
+            int idx_carte;
+            CarteAbstrait carte_choisi;
+
+            String userInput = input.nextLine();
+            try{
+                if(useRegexNormalCard(userInput) && !arrayControl[2]){
+                    System.out.println(" " + userInput);
+
+                    do {
+                        idx_carte = (userInput.charAt(3)-'0');
+
+                        carte_choisi = players[indiceCurrentPlayer].getMainJoueur().get(idx_carte);
+
+                        /**
+                         * TODO : check if joker card, if yes, ask the colour and use method to select colour
+                         */
+                        if (carte_choisi instanceof CarteJoker){
+                            System.out.println("C'est une carte Joker !"+
+                                                "Vous devez rentrer /j "+idx_carte+" couleur");
+
+
+                            ((CarteJoker) carte_choisi).setCouleurCarteJoker(chooseJokerCardColor());
+
+                            break;
+
+                        }
+
+                    }while(!carte_choisi.isCompatible(talon.getSommetTalon()));
+
+                    talon.empiler(players[indiceCurrentPlayer].retirerCarte(idx_carte));
+                    System.out.println("Le joueur : " + players[indiceCurrentPlayer].getNom() +
+                                        "joue un " + carte_choisi.getType() +
+                                        "de couleur " + carte_choisi.getCouleur()
+                                        );
+
+                    arrayControl[2] = true;
+                    return carte_choisi;
+                }
+                if(useRegexShowHand(userInput)){
+                    System.out.println("La main du joueur "+ players[indiceCurrentPlayer].getNom() + " est " + players[indiceCurrentPlayer].getMainJoueur().toString());
+                    continue;
+                }
+                if(useRegexTakeCard(userInput) && !arrayControl[0]){
+                    arrayControl[0] = true;
+                    System.out.println("Je prends une carte");
+                    players[indiceCurrentPlayer].getMainJoueur().add(prendreUneCarte());
+                    continue;
+                }
+                if(useRegexPasser(userInput) && !arrayControl[1]){
+                    arrayControl[1] = true;
+                    System.out.println("Je passe");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Mauvaise saisie");
+            }
+
+        }
+        return null;
+    }
+
+    private CouleurCarte chooseJokerCardColor() {
+
+        String userInput;
+
+        do {
+            System.out.println("Quelle couleur attendue?");
+            userInput = input.nextLine();
+        }while(!CouleurCarte.contains(userInput));
+
+        return(CouleurCarte.valueOf(userInput.toUpperCase()));
+    }
+
+    public void afficherScore(){
+        for (Player player:players
+        ) {
+            System.out.println("Score du joueur : "+player.getScore() + " = " + player.getScore());
+        }
+    }
+
+    public void applyCardEffect(CarteAbstrait carte){
+        switch(carte.getType()){
+            case SKIP -> {
+                System.out.println("Le prochain joueur est skip!");
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, true);
+            }
+            case REVERSE -> {
+                System.out.println("Changement de sens!");
+                sensmanche = SensJeu.ANTI_HORAIRE;
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+            }
+            case PLUS_DEUX -> {
+                for (int i = 0; i <2; i++) {
+                    players[incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false)].getMainJoueur().add(prendreUneCarte());
+                }
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+            }
+            case PLUS_QUATRE -> {
+                //choix couleur avant, casting carte???
+                for (int i = 0; i < 4; i++) {
+                    players[incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false)].getMainJoueur().add(prendreUneCarte());
+                }
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+                    /*
+                    System.out.println("Tour de " + currentPlayer.getNom());
+                    if(talon.getSommetTalon() instanceof CarteAction)
+                     */
+            }
+            case CHANG_COULEUR -> {
+                //choix couleur avant, casting carte???
+            }
+            case NOMBRE -> {
+                indiceCurrentPlayer = incrIndiceCurrentPlayer(indiceCurrentPlayer, sensmanche, false);
+            }
+        }
+    }
 
 }
