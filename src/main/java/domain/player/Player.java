@@ -59,15 +59,4 @@ public class Player {
         return mainJoueur.size();
     }
 
-
-
-
-
-
-    //prendreCarte
-    //jouerTour
-    //donnerCouleur
-
-
-
 }

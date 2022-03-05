@@ -1,3 +1,4 @@
+/*
 package main.java.domain.cards;
 
 public class CarteMethodesUtiles {
@@ -33,3 +34,4 @@ public class CarteMethodesUtiles {
     }
 
 }
+*/

@@ -8,7 +8,6 @@ public class CarteJoker extends CarteAbstrait {
 
     public CarteJoker(TypeCarte type, CouleurCarte couleur){
         super(type, couleur);
-        CarteMethodesUtiles.estCouleurValide(couleur);
     }
 
     // TODO: 17/02/2022  
@@ -35,7 +34,7 @@ public class CarteJoker extends CarteAbstrait {
 
     @Override
     public String toString() {
-        return "CarteJoker{" + getType() + ", " + getCouleur() + "}";
+        return "CarteJoker{" + getType() + ", " + getCouleur() + "}\n";
     }
 
 }

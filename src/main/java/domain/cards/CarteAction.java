@@ -4,8 +4,8 @@ public class CarteAction extends CarteAbstrait {
 
     public CarteAction(TypeCarte type, CouleurCarte couleur){
         super(type, couleur);
-        CarteMethodesUtiles.estActionValide(type);
-        CarteMethodesUtiles.estCouleurValide(couleur);
+/*        CarteMethodesUtiles.estActionValide(type);
+        CarteMethodesUtiles.estCouleurValide(couleur);*/
     }
 
     // TODO: 17/02/2022  
@@ -46,6 +46,6 @@ public class CarteAction extends CarteAbstrait {
 
     @Override
     public String toString() {
-        return "CarteAction{" + getType() + ", " + getCouleur() + "}";
+        return "CarteAction{" + getType() + ", " + getCouleur() + "} \n";
     }
 }

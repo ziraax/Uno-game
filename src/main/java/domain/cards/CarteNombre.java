@@ -48,7 +48,7 @@ public class CarteNombre extends CarteAbstrait {
 
     @Override
     public String toString() {
-        return "CarteNombre{" + getNumCard() + ", " + getCouleur() + '}';
+        return "CarteNombre{" + getNumCard() + ", " + getCouleur() + "}\n";
     }
 
 }

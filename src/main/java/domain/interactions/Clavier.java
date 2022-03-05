@@ -105,5 +105,10 @@ public class Clavier {
         return matcher.matches();
     }
 
+    public static boolean useRegexJokerCard(final String input) {
+        final Pattern pattern = Pattern.compile("/j\\s[0-9]+\\s[a-zA-Z]+", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
 
 }
