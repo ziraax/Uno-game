@@ -12,8 +12,6 @@ public class CarteNombre extends CarteAbstrait {
         return num;
     }
 
-
-
     // TODO: 17/02/2022
     @Override
     public boolean isCompatible(CarteAbstrait carte) {
@@ -29,14 +27,10 @@ public class CarteNombre extends CarteAbstrait {
         if(carte instanceof CarteNombre){
             CarteNombre carteA = (CarteNombre) carte;
 
-            if(carteA.getNumCard() == getNumCard()){
-                return true;
-            }
+            return carteA.getNumCard() == getNumCard();
         }
-
         return false;
     }
-
 
     @Override
     public boolean equals(Object o) {

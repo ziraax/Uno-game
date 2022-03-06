@@ -52,6 +52,10 @@ public class Pioche {
         return pioche.size();
     }
 
+    public CarteAbstrait getCardFromPioche(int i){
+        return pioche.get(i);
+    }
+
     public void empiler(CarteAbstrait carte) {
         pioche.add(0, carte);
     }

@@ -19,12 +19,6 @@ public abstract class CarteAbstrait implements Carte {
         return couleur;
     }
 
-
-    /**
-     *
-     * @param carte
-     * @return boolean de compatibilité
-     */
     public abstract boolean isCompatible(CarteAbstrait carte);
 
     @Override

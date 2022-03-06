@@ -4,8 +4,6 @@ public class CarteAction extends CarteAbstrait {
 
     public CarteAction(TypeCarte type, CouleurCarte couleur){
         super(type, couleur);
-/*        CarteMethodesUtiles.estActionValide(type);
-        CarteMethodesUtiles.estCouleurValide(couleur);*/
     }
 
     // TODO: 17/02/2022  

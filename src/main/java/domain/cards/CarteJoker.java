@@ -6,10 +6,6 @@ public class CarteJoker extends CarteAbstrait {
         super(type, null);
     }
 
-    public CarteJoker(TypeCarte type, CouleurCarte couleur){
-        super(type, couleur);
-    }
-
     // TODO: 17/02/2022  
     @Override
     public boolean isCompatible(CarteAbstrait carte) {

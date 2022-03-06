@@ -38,21 +38,13 @@ public class Talon {
      */
     public CarteAbstrait initTalonPremiereCarteNoPlus4(Pioche pioche){
 
-        CarteAbstrait carte;
-
-        while(true){
-            carte = pioche.depiler();
-            if(carte.getType() == TypeCarte.valueOf("PLUS_QUATRE")){
-                remelangerCarte(carte);
-            } else {
+        for (int i = 0; i < pioche.nbCarte(); i++) {
+            CarteAbstrait carte = pioche.getCardFromPioche(i);
+            if(!(carte.getType() == TypeCarte.PLUS_QUATRE)){
                 return carte;
             }
         }
-    }
-
-    private void remelangerCarte(CarteAbstrait carte){
-        //to be written
-        System.out.println("To be written");
+        return null;
     }
 
 }
