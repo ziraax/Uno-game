@@ -16,11 +16,8 @@ public class Manche {
     private int indiceCurrentPlayer;
     private boolean hasPlayerPickACard;
     public SensJeu sensmanche;
-
     public Player[] players;
-
     static Scanner input = new Scanner(System.in);
-
 
     public Manche(Player[] players) {
 
@@ -93,24 +90,26 @@ public class Manche {
 
     }
 
+    //TODO Check this shit
     public int getNextPlayer() {
-        int nextIndex = indiceCurrentPlayer;
+        int actualIndex = indiceCurrentPlayer;
+        int nextIndex = actualIndex;
 
         switch (sensmanche) {
             case HORAIRE -> {
-                if (indiceCurrentPlayer < players.length - 1) {
-                    nextIndex = indiceCurrentPlayer++;
+                if (actualIndex < players.length - 1) {
+                    nextIndex = actualIndex++;
                 } else {
-                    indiceCurrentPlayer = 0;
-                    nextIndex = indiceCurrentPlayer;
+                    actualIndex = 0;
+                    nextIndex = actualIndex;
                 }
             }
             case ANTI_HORAIRE -> {
-                if (indiceCurrentPlayer != 0) {
-                    nextIndex = indiceCurrentPlayer--;
+                if (actualIndex != 0) {
+                    nextIndex = actualIndex--;
                 } else {
-                    indiceCurrentPlayer = players.length - 1;
-                    nextIndex = indiceCurrentPlayer;
+                    actualIndex = players.length - 1;
+                    nextIndex = actualIndex;
                 }
             }
         }
@@ -135,15 +134,17 @@ public class Manche {
                 moveToNextPlayer();
             }
             case PLUS_DEUX -> {
+                int nextPlayer = getNextPlayer();
                 for (int i = 0; i < 2; i++) {
-                    players[getNextPlayer()].getMainJoueur().add(prendreUneCarte());
+                    players[nextPlayer].getMainJoueur().add(prendreUneCarte());
                 }
                 moveToNextPlayer();
                 moveToNextPlayer();
             }
             case PLUS_QUATRE -> {
+                int nextPlayer = getNextPlayer();
                 for (int i = 0; i < 4; i++) {
-                    players[getNextPlayer()].getMainJoueur().add(prendreUneCarte());
+                    players[nextPlayer].getMainJoueur().add(prendreUneCarte());
                 }
                 moveToNextPlayer();
                 moveToNextPlayer();
