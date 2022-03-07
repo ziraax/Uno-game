@@ -13,10 +13,12 @@ public class Manche {
 
     public Pioche pioche = new Pioche();
     public Talon talon = new Talon(pioche);
+    public SensJeu sensmanche;
+
+    public Player[] players;
     private int indiceCurrentPlayer;
     private boolean hasPlayerPickACard;
-    public SensJeu sensmanche;
-    public Player[] players;
+
     static Scanner input = new Scanner(System.in);
 
     public Manche(Player[] players) {
@@ -43,7 +45,6 @@ public class Manche {
             System.out.println("La carte au sommet du talon est : " + talon.getSommetTalon());
             System.out.println("La main du joueur " + players[indiceCurrentPlayer].getNom() + " est : \n" + players[indiceCurrentPlayer].getMainJoueur().toString());
             ((CarteJoker) talon.getSommetTalon()).setCouleurCarteJoker(chooseJokerCardColor());
-            System.out.println("La carte au sommet du talon est : " + talon.getSommetTalon());
         } else {
             applyCardEffect(talon.getSommetTalon());
         }
@@ -56,6 +57,7 @@ public class Manche {
             System.out.println(players[indiceCurrentPlayer].getNom() + " à vous de jouer !");
 
             CarteAbstrait carte_choisi = ReadCommandAndPlay();
+
 
             if (!(carte_choisi == null)) {
                 applyCardEffect(carte_choisi);
@@ -70,7 +72,6 @@ public class Manche {
     }
 
     public void moveToNextPlayer() {
-
         switch (sensmanche) {
             case HORAIRE -> {
                 if (indiceCurrentPlayer < players.length - 1) {
@@ -90,35 +91,6 @@ public class Manche {
 
     }
 
-    //TODO Check this shit
-    public int getNextPlayer() {
-        int actualIndex = indiceCurrentPlayer;
-        int nextIndex = actualIndex;
-
-        switch (sensmanche) {
-            case HORAIRE -> {
-                if (actualIndex < players.length - 1) {
-                    nextIndex = actualIndex++;
-                } else {
-                    actualIndex = 0;
-                    nextIndex = actualIndex;
-                }
-            }
-            case ANTI_HORAIRE -> {
-                if (actualIndex != 0) {
-                    nextIndex = actualIndex--;
-                } else {
-                    actualIndex = players.length - 1;
-                    nextIndex = actualIndex;
-                }
-            }
-        }
-
-        return nextIndex;
-
-
-    }
-
     public void applyCardEffect(CarteAbstrait carte) {
         switch (carte.getType()) {
             case SKIP -> {
@@ -134,19 +106,64 @@ public class Manche {
                 moveToNextPlayer();
             }
             case PLUS_DEUX -> {
-                int nextPlayer = getNextPlayer();
-                for (int i = 0; i < 2; i++) {
-                    players[nextPlayer].getMainJoueur().add(prendreUneCarte());
-                }
                 moveToNextPlayer();
+                for (int i = 0; i < 2; i++) {
+                    players[indiceCurrentPlayer].getMainJoueur().add(prendreUneCarte());
+                }
                 moveToNextPlayer();
             }
             case PLUS_QUATRE -> {
-                int nextPlayer = getNextPlayer();
-                for (int i = 0; i < 4; i++) {
-                    players[nextPlayer].getMainJoueur().add(prendreUneCarte());
-                }
+                int indiceLastPlayer = indiceCurrentPlayer;
                 moveToNextPlayer();
+
+                //bluff scenario
+                while(true){
+                    try {
+                        System.out.println("Entrez /b si vous pensez que :" + players[indiceLastPlayer].getNom()
+                                            + "vient de bluffer. N'importe quoi d'autre sinon.");
+                        String userInput = input.nextLine();
+                        if(isRegexBluff(userInput)){
+                            boolean isGuilty = false;
+                            //temp
+                            CarteAbstrait lastCard = talon.depiler();
+                            CarteAbstrait beforeLastCard = talon.depiler();
+
+                            for (int i = 0; i < players[indiceLastPlayer].nbCartesMain(); i++) {
+                                if(beforeLastCard.isCompatible(players[indiceLastPlayer].getMainJoueur().get(i))){
+                                    isGuilty = true;
+                                    break;
+                                }
+                            }
+                            if(isGuilty){
+                                System.out.println("Le joueur " + players[indiceLastPlayer].getNom() + " est coupable ! ");
+                                System.out.println("Penalité de 4 cartes...");
+                                for (int i = 0; i < 4; i++) {
+                                    players[indiceLastPlayer].getMainJoueur().add(prendreUneCarte());
+                                }
+                            } else {
+                                System.out.println("Le joueur " + players[indiceLastPlayer].getNom() + " est innocent ! ");
+                                System.out.println("Le joueur " + players[indiceCurrentPlayer].getNom() + " tire 6 cartes au lieu de 4...");
+                                for (int i = 0; i < 6; i++) {
+                                    players[indiceCurrentPlayer].getMainJoueur().add(prendreUneCarte());
+                                }
+                            }
+
+                            talon.empiler(beforeLastCard);
+                            talon.empiler(lastCard);
+
+                            break;
+                        } else {
+                            for (int i = 0; i < 4; i++) {
+                                players[indiceCurrentPlayer].getMainJoueur().add(prendreUneCarte());
+                            }
+                            break;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("On ne comprend pas votre commande, ré-essayez !");
+                    }
+                }
+
+
                 moveToNextPlayer();
             }
             case CHANG_COULEUR, NOMBRE -> moveToNextPlayer();
