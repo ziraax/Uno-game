@@ -9,7 +9,7 @@ import java.util.function.ToDoubleBiFunction;
 public class Jeu {
     public int nbJoueurs;
     public Player[] players;
-    final static int MAXPOINT = 20;
+    final static int MAXPOINT = 500;
 
     public Jeu(){
         System.out.println("Nombre de joueurs [2-10] : ");
@@ -22,6 +22,8 @@ public class Jeu {
             Manche manche = new Manche(players);
             manche.lancerUneManche();
         }
+        System.out.println("================FIN DE LA PARTIE================");
+
         afficherScore();
     }
 
