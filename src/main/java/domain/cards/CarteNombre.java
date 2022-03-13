@@ -12,7 +12,6 @@ public class CarteNombre extends CarteAbstrait {
         return num;
     }
 
-    // TODO: 17/02/2022
     @Override
     public boolean isCompatible(CarteAbstrait carte) {
 

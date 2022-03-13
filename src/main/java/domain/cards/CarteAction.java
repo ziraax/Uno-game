@@ -6,7 +6,6 @@ public class CarteAction extends CarteAbstrait {
         super(type, couleur);
     }
 
-    // TODO: 17/02/2022  
     @Override
     public boolean isCompatible(CarteAbstrait carte) {
 

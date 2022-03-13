@@ -40,7 +40,7 @@ public class Manche {
         afficherInfoCommande();
         System.out.println("La manche commence !");
 
-        // TODO: 05/03/2022 regler le soucis pour le changement de couleur premiere carte
+        //check si la premiere carte est un changement de couleur
         if (checkIfFirstCardIsJoker(talon.getSommetTalon())) {
             System.out.println("La carte au sommet du talon est : " + talon.getSommetTalon());
             System.out.println("La main du joueur " + players[indiceCurrentPlayer].getNom() + " est : \n" + players[indiceCurrentPlayer].getMainJoueur().toString());
@@ -119,14 +119,17 @@ public class Manche {
                 //bluff scenario
                 while(true){
                     try {
-                        System.out.println("Entrez /b si vous pensez que :" + players[indiceLastPlayer].getNom()
-                                            + "vient de bluffer. N'importe quoi d'autre sinon.");
+                        System.out.println("Entrez /b si vous pensez que : " + players[indiceLastPlayer].getNom()
+                                            + " vient de bluffer. N'importe quoi d'autre sinon.");
                         String userInput = input.nextLine();
                         if(isRegexBluff(userInput)){
                             boolean isGuilty = false;
                             //temp
                             CarteAbstrait lastCard = talon.depiler();
                             CarteAbstrait beforeLastCard = talon.depiler();
+
+                            System.out.println("Voici la main du joueur ayant posé le +4 : ");
+                            System.out.println(players[indiceCurrentPlayer].getMainJoueur().toString());
 
                             for (int i = 0; i < players[indiceLastPlayer].nbCartesMain(); i++) {
                                 if(beforeLastCard.isCompatible(players[indiceLastPlayer].getMainJoueur().get(i))){
@@ -140,6 +143,7 @@ public class Manche {
                                 for (int i = 0; i < 4; i++) {
                                     players[indiceLastPlayer].getMainJoueur().add(prendreUneCarte());
                                 }
+
                             } else {
                                 System.out.println("Le joueur " + players[indiceLastPlayer].getNom() + " est innocent ! ");
                                 System.out.println("Le joueur " + players[indiceCurrentPlayer].getNom() + " tire 6 cartes au lieu de 4...");
@@ -171,7 +175,6 @@ public class Manche {
         }
     }
 
-    // TODO: 05/03/2022 A VERIFIER
     public boolean checkIfFirstCardIsJoker(CarteAbstrait carteInit) {
         return carteInit.getType() == TypeCarte.CHANG_COULEUR;
     }
@@ -285,14 +288,6 @@ public class Manche {
         }
     }
 
-    //DELETE
-    private void informationJeu() {
-        for (Player player : players
-        ) {
-            System.out.println(Arrays.toString(player.getMainJoueur().toArray()) + player.getNom());
-        }
-    }
-
     public void dealCartes() {
         for (int nbCarte = 0; nbCarte < 6; nbCarte++) {
             for (Player player : players
@@ -302,9 +297,6 @@ public class Manche {
         }
     }
 
-    /**
-     * @return la carte tirée de la pioche
-     */
     public CarteAbstrait prendreUneCarte() {
         if (pioche.nbCarte() == 0) {
             /* ATTENTION IL Y A LE SHUFFLE IL FAUDRA TROUVER UNE SOLUTION */
@@ -360,10 +352,13 @@ public class Manche {
     public void resetHands() {
         for (Player player : players
         ) {
-            for (int i = 0; i < player.nbCartesMain(); i++) {
-                pioche.empiler(player.retirerCarte(i));
+            while(player.nbCartesMain() > 0){
+                for (int i = 0; i < player.nbCartesMain(); i++) {
+                    pioche.empiler(player.retirerCarte(i));
+                }
             }
         }
+
     }
 
 }

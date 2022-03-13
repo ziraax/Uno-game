@@ -33,19 +33,10 @@ public class Player {
         return nom;
     }
 
-    /**
-     * ajoute une carte dans la main du joueur
-     * @param Carte a ajouter
-     */
     public void ajoutCarte(CarteAbstrait Carte){
         mainJoueur.add(Carte);
     }
 
-    /**
-     * retire une carte de la main du joueur et la retourne pour pouvoir l'empiler autre part
-     * @param num l'index de la carte dans la main
-     * @return la carte choisie
-     */
     public CarteAbstrait retirerCarte(int num) {
         return mainJoueur.remove(num);
     }
