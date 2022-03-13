@@ -30,13 +30,7 @@ public class Talon {
         talon.add(0, carte);
     }
 
-    /**
-     *
-     * @param pioche de la partie
-     * @return la premiere carte du talon qui n'est pas un +4
-     * si c'est le cas, on la remelange dans la pioche
-     */
-    public CarteAbstrait initTalonPremiereCarteNoPlus4(Pioche pioche){
+    private CarteAbstrait initTalonPremiereCarteNoPlus4(Pioche pioche){
 
         for (int i = 0; i < pioche.nbCarte(); i++) {
             CarteAbstrait carte = pioche.getCardFromPioche(i);

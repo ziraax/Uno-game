@@ -3,18 +3,15 @@ package main.java.domain.game;
 import main.java.domain.interactions.Interaction;
 import main.java.domain.player.Player;
 
-import java.util.Objects;
-import java.util.function.ToDoubleBiFunction;
-
 public class Jeu {
-    public int nbJoueurs;
-    public Player[] players;
-    final static int MAXPOINT = 150;
+    private final int nbJoueurs;
+    protected Player[] players;
+    final static int MAXPOINT = 500;
 
     public Jeu(){
         System.out.println("Nombre de joueurs [2-10] : ");
         nbJoueurs = Interaction.readIntBetweenInterval(2,10);
-        initialisationJoueurs(nbJoueurs);
+        initialisationJoueurs();
     }
 
     public void lancer(){
@@ -28,7 +25,7 @@ public class Jeu {
         afficherScore();
     }
 
-    public boolean jeuTermine(){
+    private boolean jeuTermine(){
         for (Player player: players
              ) {
             if(player.getScore() > MAXPOINT){
@@ -38,7 +35,7 @@ public class Jeu {
         return false;
     }
 
-    public void getAndPrintWinners(){
+    private void getAndPrintWinners(){
         int min = players[0].getScore();
 
         for (Player player: players) {
@@ -62,10 +59,10 @@ public class Jeu {
         }
     }
 
-    public void initialisationJoueurs(int i){
-        players = new Player[i];
+    private void initialisationJoueurs(){
+        players = new Player[nbJoueurs];
         String nom;
-        for (int j = 0; j < i; j++) {
+        for (int j = 0; j < nbJoueurs; j++) {
             System.out.println("Nom du joueur ?");
             nom = Interaction.readString();
             players[j] = new Player(nom, 0);

@@ -11,11 +11,11 @@ import static main.java.domain.interactions.Interaction.*;
 
 public class Manche {
 
-    public Pioche pioche = new Pioche();
-    public Talon talon = new Talon(pioche);
-    public SensJeu sensmanche;
+    private final Pioche pioche = new Pioche();
+    private final Talon talon = new Talon(pioche);
+    private SensJeu sensmanche;
 
-    public Player[] players;
+    private final Player[] players;
     private int indiceCurrentPlayer;
     private boolean hasPlayerPickACard;
 
